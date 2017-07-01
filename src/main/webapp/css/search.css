@@ -1,0 +1,25 @@
+.serchBackGround {
+	border-radius: 5px;
+	background-color: #f2f2f2;
+	padding: 20px;
+	float: top !important;
+  
+}
+
+.searchinput {
+    color: #555;
+    margin-left: 70px;
+    margin-top: 12px;
+    width: 254px;  
+}
+
+.searchsubmit {
+    width: 30%;
+    padding: 12px 20px;
+    margin: 10px 0;
+    display: inline-block;
+    border: 3px solid #ccc;
+    box-sizing: border-box;
+    margin-right: 35px;
+    background-color: #f2f2f2;
+}
