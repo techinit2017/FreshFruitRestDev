@@ -15,6 +15,8 @@ public interface IUserDAO extends CrudRepository<User, Long> {
 	User save(User user);
 
 	User findByUserId(Integer userid);
+	
+	User findByUserName(String name);
 
 	void deleteByUserId(Integer userid);
 

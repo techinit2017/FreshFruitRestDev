@@ -42,6 +42,17 @@ public class UserController {
 		}
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/userByName/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> getUserByName(@PathVariable("name") String name) {
+		System.out.println("Fetching User with name " + name);
+		User user = userService.findByUserName(name);
+		if (user == null) {
+			System.out.println("User with id " + name + " not found");
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)
 	public ResponseEntity<Void> saveEmployee(@RequestBody User user, UriComponentsBuilder ucBuilder) {

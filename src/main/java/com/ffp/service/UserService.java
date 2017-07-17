@@ -25,6 +25,10 @@ public class UserService {
 	public User findByUserId(int userid) {
 		return userDao.findByUserId(userid);
 	}
+	
+	public User findByUserName(String name) {
+		return userDao.findByUserName(name);
+	}
 
 	public void delete(int userid) {
 		userDao.deleteByUserId(userid);
