@@ -6,11 +6,11 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.ffp.data.Product;
 
-public interface IProductDAO extends CrudRepository<Product, Long> {
+public interface IProductDAO extends CrudRepository<Product, Integer> {
 
 	Product save(Product product); 
 
-	Product findOne(Long id);
+	Product findOne(Integer id);
 	
 	List<Product> findByName(String name);
 	
@@ -18,13 +18,13 @@ public interface IProductDAO extends CrudRepository<Product, Long> {
 	
 	List<Product> findBySellerId(String sellerId);
 	
-	List<Product> findByAvailable(long available);
+	List<Product> findByAvailable(int available);
 
-	boolean exists(Long id); 
+	boolean exists(Integer id); 
 
 	List<Product> findAll();
 
-	void delete(Long id); 
+	void delete(Integer id); 
 
 	void delete(Product product);
 	

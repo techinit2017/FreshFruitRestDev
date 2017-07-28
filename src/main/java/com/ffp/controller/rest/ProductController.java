@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ffp.data.Product;
+import com.ffp.data.SearchProduct;
 import com.ffp.data.UserProfile;
 import com.ffp.service.ProductService;
 
@@ -32,7 +33,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value = "/getProductByID/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Product> getProductByID(@PathVariable("id") long id) {
+	public ResponseEntity<Product> getProductByID(@PathVariable("id") Integer id) {
 		Product product = productService.findOne(id);
 		return new ResponseEntity<Product>(product, HttpStatus.OK);
 	}
@@ -56,7 +57,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value = "/getProductByAvailable/{available}", method = RequestMethod.GET)
-	public ResponseEntity<List<Product>> getProductBySellerId(@PathVariable("available") long available) {
+	public ResponseEntity<List<Product>> getProductBySellerId(@PathVariable("available") int available) {
 		List<Product> products = productService.findByAvailable(available);
 		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
 	}
@@ -90,9 +91,16 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable("id") long id) {
+	public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
 		productService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+	}
+	
+	@RequestMapping(value = "/getSearchProducts", method = RequestMethod.POST)
+	public ResponseEntity<List<Product>> getSearchProducts(@RequestBody SearchProduct searchProduct) {
+
+		List<Product> allProducts = productService.findSearch(searchProduct);
+		return new ResponseEntity<List<Product>>(allProducts, HttpStatus.OK);
 	}
 
 }

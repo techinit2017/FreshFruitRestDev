@@ -18,11 +18,11 @@ public class UserProfileService {
 		return userProfileDao.save(userProfile);
 	}
 
-	public UserProfile findOne(Long id) {
+	public UserProfile findOne(Integer id) {
 		return userProfileDao.findOne(id);
 	}
 
-	public boolean exists(Long id) {
+	public boolean exists(Integer id) {
 		return userProfileDao.exists(id);
 	}
 
@@ -34,7 +34,7 @@ public class UserProfileService {
 		return userProfileDao.count();
 	}
 
-	public void delete(Long id) {
+	public void delete(Integer id) {
 		userProfileDao.delete(id);
 	}
 	

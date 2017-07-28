@@ -5,19 +5,19 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import com.ffp.data.UserProfile;
 
-public interface IUserProfileDAO extends CrudRepository<UserProfile, Long> {
+public interface IUserProfileDAO extends CrudRepository<UserProfile, Integer> {
 	
 	UserProfile  save(UserProfile entity);
 
-	UserProfile findOne(Long id); 
+	UserProfile findOne(Integer id); 
 
-	boolean existsById(Long id); 
+	boolean existsById(Integer id); 
 
 	List<UserProfile> findAll(); 
 
 	long count(); 
 
-	void delete(Long id); 
+	void delete(Integer id); 
 	
 	List<UserProfile> findByLastName(String lastName); 
 	

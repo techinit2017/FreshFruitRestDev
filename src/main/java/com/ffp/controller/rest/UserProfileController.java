@@ -33,12 +33,12 @@ public class UserProfileController {
 	}
 	@ExceptionHandler({ FFPExceptionHandler.class })
 	@RequestMapping(value = "/getUserProfileByID/{id}", method = RequestMethod.GET)
-	public ResponseEntity<UserProfile> getUserProfileByID(@PathVariable("id") long id) {
+	public ResponseEntity<UserProfile> getUserProfileByID(@PathVariable("id") Integer id) {
 		System.out.println("id==" + id);
 		UserProfile userProfile = userProfileService.findOne(id);
-		UserProfile userProfile2 = new UserProfile(userProfile.getUserName(), userProfile.getPassword(),
-				userProfile.getUserType());
-		return new ResponseEntity<UserProfile>(userProfile2, HttpStatus.OK);
+//		UserProfile userProfile2 = new UserProfile(userProfile.getUserName(), userProfile.getPassword(),
+//				userProfile.getUserType());
+		return new ResponseEntity<UserProfile>(userProfile, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/getUsersProfileByLastName/{lastName}", method = RequestMethod.GET)
