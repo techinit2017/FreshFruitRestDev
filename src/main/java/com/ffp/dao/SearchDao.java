@@ -21,7 +21,7 @@ public class SearchDao {
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
 	
-	public List<Product> doSearch(SearchProduct searchProduct){
+	public List<Product> doSearch(SearchProduct searchProduct, boolean override) {
 //		SessionFactory factory = new Configuration().configure().buildSessionFactory();
 //		Session session = factory.openSession();
 		//Session session = hibernateTemplate.getSessionFactory().getCurrentSession();
@@ -33,17 +33,20 @@ public class SearchDao {
 		if (searchProduct.getType() != null) {
 			criteria.add(Restrictions.eq("type", searchProduct.getType()));
 		}
-		if (searchProduct.getPriceBelow() != null) {
-			criteria.add(Restrictions.le("price", searchProduct.getPriceBelow()));
-		}
-		if (searchProduct.getPriceAbove() != null) {
-			criteria.add(Restrictions.ge("price", searchProduct.getPriceAbove()));
-		}
-		if (searchProduct.getAvailable() != null) {
-			criteria.add(Restrictions.eq("available", "1"));
-		}
-		if (searchProduct.getQuantityAvailable() != null) {
-			criteria.add(Restrictions.le("quantityAvailable", searchProduct.getQuantityAvailable()));
+		
+		if (!override) {
+			if (searchProduct.getPriceBelow() != null) {
+				criteria.add(Restrictions.le("price", searchProduct.getPriceBelow()));
+			}
+			if (searchProduct.getPriceAbove() != null) {
+				criteria.add(Restrictions.ge("price", searchProduct.getPriceAbove()));
+			}
+			if (searchProduct.getAvailable() != null) {
+				criteria.add(Restrictions.eq("available", "1"));
+			}
+			if (searchProduct.getQuantityAvailable() != null) {
+				criteria.add(Restrictions.le("quantityAvailable", searchProduct.getQuantityAvailable()));
+			}
 		}
 		List results = hibernateTemplate.findByCriteria(criteria);
 		return results;

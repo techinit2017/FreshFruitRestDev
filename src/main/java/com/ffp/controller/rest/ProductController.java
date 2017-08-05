@@ -15,7 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ffp.data.Product;
 import com.ffp.data.SearchProduct;
-import com.ffp.data.UserProfile;
 import com.ffp.service.ProductService;
 
 @RestController
@@ -87,20 +86,28 @@ public class ProductController {
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@RequestBody Product product, UriComponentsBuilder ucBuilder) {
 		productService.delete(product);
-		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
 		productService.delete(id);
-		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
+	/**
+	 * 
+	 * @param searchProduct
+	 * @return HttpStatus.OK when exact search is match else HttpStatus.PARTIAL_CONTENT
+	 */
 	@RequestMapping(value = "/getSearchProducts", method = RequestMethod.POST)
 	public ResponseEntity<List<Product>> getSearchProducts(@RequestBody SearchProduct searchProduct) {
-
-		List<Product> allProducts = productService.findSearch(searchProduct);
-		return new ResponseEntity<List<Product>>(allProducts, HttpStatus.OK);
+		List<Product> allProducts = productService.findSearch(searchProduct, false);
+		HttpStatus status = HttpStatus.OK;
+		if (allProducts.size() == 0) {
+			allProducts = productService.findSearch(searchProduct, true);
+			status = HttpStatus.PARTIAL_CONTENT;
+		}
+		return new ResponseEntity<List<Product>>(allProducts, status);
 	}
 
 }

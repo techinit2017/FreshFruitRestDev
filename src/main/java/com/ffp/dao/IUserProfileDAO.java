@@ -2,6 +2,7 @@ package com.ffp.dao;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import com.ffp.data.UserProfile;
 
@@ -25,7 +26,7 @@ public interface IUserProfileDAO extends CrudRepository<UserProfile, Integer> {
 	
 	UserProfile findByEmailId(String emailId); 
 	
-	UserProfile findByPhoneNumber(String phoneNumber); 
+	UserProfile findByPhoneNumber(String phoneNumber);
 	
 	boolean existsByUserName(String userName);
 }

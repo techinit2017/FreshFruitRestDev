@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 import com.ffp.data.Product;
+import com.ffp.data.UserProfile;
 
 public interface IProductDAO extends CrudRepository<Product, Integer> {
 
@@ -16,7 +17,7 @@ public interface IProductDAO extends CrudRepository<Product, Integer> {
 	
 	List<Product> findByType(String type);
 	
-	List<Product> findBySellerId(String sellerId);
+	List<Product> findByUserProfile(UserProfile profile);
 	
 	List<Product> findByAvailable(int available);
 

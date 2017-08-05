@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.ffp.data.Product;
+import com.ffp.data.SearchProduct;
 import com.ffp.data.UserProfile;
 import com.ffp.service.UserProfileService;
 import com.ffp.utils.FFPExceptionHandler;
@@ -86,6 +88,18 @@ public class UserProfileController {
 	public ResponseEntity<UserProfile> getUserProfileByPhoneNumber(@PathVariable("phoneNumber") String phoneNumber) {
 		UserProfile userProfile = userProfileService.findByPhoneNumber(phoneNumber);
 		return new ResponseEntity<UserProfile>(userProfile, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/validate", method = RequestMethod.POST)
+	public ResponseEntity<Void> validate(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
+		HttpHeaders headers = new HttpHeaders();
+		HttpStatus status;
+		if (userProfileService.exists(userProfile)) {
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.NOT_ACCEPTABLE;
+		}
+		return new ResponseEntity<Void>(headers, status);
 	}
 
 }

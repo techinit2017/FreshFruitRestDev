@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ffp.dao.IUserProfileDAO;
 import com.ffp.data.UserProfile;
+import com.ffp.utils.Utils;
 
 @Service
 public class UserProfileService {
@@ -56,5 +57,23 @@ public class UserProfileService {
 	
 	public boolean exists(String userName) {
 		return userProfileDao.existsByUserName(userName);
+	}
+	
+	public boolean exists(UserProfile userProfile) {
+		UserProfile existingUserProfile = userProfileDao.findOne(userProfile.getId());
+		if (existingUserProfile == null) {
+			return false;
+		}
+		
+		if (!Utils.dateFormatter("yyyy-MM-dd", existingUserProfile.getDob()).equals(Utils.dateFormatter("yyyy-MM-dd", existingUserProfile.getDob()))) {
+			return false;
+		}
+		if (!existingUserProfile.getSecretQuestion().equals(userProfile.getSecretQuestion())) {
+			return false;
+		}
+		if (!existingUserProfile.getSecretAnswer().equals(userProfile.getSecretAnswer())) {
+			return false;
+		}
+		return true;
 	}
 }

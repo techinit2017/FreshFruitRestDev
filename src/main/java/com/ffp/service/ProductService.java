@@ -9,6 +9,7 @@ import com.ffp.dao.IProductDAO;
 import com.ffp.dao.SearchDao;
 import com.ffp.data.Product;
 import com.ffp.data.SearchProduct;
+import com.ffp.data.UserProfile;
 
 @Service
 public class ProductService {
@@ -35,7 +36,9 @@ public class ProductService {
 	}
 
 	public List<Product> findBySellerId(String sellerId) {
-		return productDAO.findBySellerId(sellerId);
+		UserProfile profile=new UserProfile();
+		profile.setId(Integer.parseInt(sellerId));
+		return productDAO.findByUserProfile(profile);
 	}
 
 	public List<Product> findByAvailable(int available) {
@@ -58,8 +61,8 @@ public class ProductService {
 		productDAO.delete(id);
 	}
 	
-	public List<Product> findSearch(SearchProduct searchProduct) {
-		return searchDao.doSearch(searchProduct);
+	public List<Product> findSearch(SearchProduct searchProduct, boolean override) {
+		return searchDao.doSearch(searchProduct, override);
 	}
 
 }
