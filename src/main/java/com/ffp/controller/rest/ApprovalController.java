@@ -28,16 +28,21 @@ public class ApprovalController {
 	
 	@RequestMapping(value = "/getApprovalByID/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Approval> getApprovalByID(@PathVariable("id") Integer id) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		Approval approval = approvalService.findOne(id);
-		return new ResponseEntity<Approval>(approval, HttpStatus.OK);
+		if (approval == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<Approval>(approval, httpStatus);
 	}
 	
 	@RequestMapping(value = "/approve", method = RequestMethod.POST)
 	public ResponseEntity<Void> approve(@RequestBody Approval approval, UriComponentsBuilder ucBuilder) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		Approval newApproval = approvalService.save(approval);
 		profileService.save(approval.getUserProfile());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/getApprovalByID/{id}").buildAndExpand(newApproval.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.OK);
+		return new ResponseEntity<Void>(headers, httpStatus);
 	}
 }

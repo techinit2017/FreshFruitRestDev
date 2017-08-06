@@ -24,19 +24,31 @@ public class CountryController {
 	
 	@RequestMapping(value = "/getCountryByID/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Country> getCountryByID(@PathVariable("id") Integer id) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		Country country = countryService.findOne(id);
-		return new ResponseEntity<Country>(country, HttpStatus.OK);
+		if (country == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<Country>(country, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getCountryByCountry/{countryName}", method = RequestMethod.GET)
 	public ResponseEntity<Country> getCountryByCountry(@PathVariable("countryName") String countryName) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		Country country = countryService.findByCountry(countryName);
-		return new ResponseEntity<Country>(country, HttpStatus.OK);
+		if (country == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<Country>(country, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getAllCountry", method = RequestMethod.GET)
 	public ResponseEntity<List<Country>> getAllCountry() {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<Country> allCountry = countryService.findAll();
-		return new ResponseEntity<List<Country>>(allCountry, HttpStatus.OK);
+		if (allCountry == null || allCountry.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<Country>>(allCountry, httpStatus);
 	}
 }

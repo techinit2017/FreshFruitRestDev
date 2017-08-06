@@ -30,27 +30,37 @@ public class UserProfileController {
 
 	@RequestMapping(value = "/getAllUsersProfile", method = RequestMethod.GET)
 	public ResponseEntity<List<UserProfile>> getAllUsersProfile() {
-
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<UserProfile> allUserProfiles = userProfileService.findAll();
-		return new ResponseEntity<List<UserProfile>>(allUserProfiles, HttpStatus.OK);
+		if (allUserProfiles == null || allUserProfiles.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<UserProfile>>(allUserProfiles, httpStatus);
 	}
 
 	@ExceptionHandler({ FFPExceptionHandler.class })
 	@RequestMapping(value = "/getUserProfileByID/{id}", method = RequestMethod.GET)
 	public ResponseEntity<UserProfile> getUserProfileByID(@PathVariable("id") Integer id) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		System.out.println("id==" + id);
 		UserProfile userProfile = userProfileService.findOne(id);
+		if (userProfile == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
 		// UserProfile userProfile2 = new UserProfile(userProfile.getUserName(),
 		// userProfile.getPassword(),
 		// userProfile.getUserType());
-		return new ResponseEntity<UserProfile>(userProfile, HttpStatus.OK);
+		return new ResponseEntity<UserProfile>(userProfile, httpStatus);
 	}
 
 	@RequestMapping(value = "/getUsersProfileByLastName/{lastName}", method = RequestMethod.GET)
 	public ResponseEntity<List<UserProfile>> getUsersProfileByLastName(@PathVariable("lastName") String lastName) {
-
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<UserProfile> allUserProfilesByLastName = userProfileService.findByLastName(lastName);
-		return new ResponseEntity<List<UserProfile>>(allUserProfilesByLastName, HttpStatus.OK);
+		if (allUserProfilesByLastName == null || allUserProfilesByLastName.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<UserProfile>>(allUserProfilesByLastName, httpStatus);
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -82,20 +92,32 @@ public class UserProfileController {
 
 	@RequestMapping(value = "/getUserProfileByUserName/{userName}", method = RequestMethod.GET)
 	public ResponseEntity<UserProfile> getUserProfileByUserName(@PathVariable("userName") String userName) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		UserProfile userProfile = userProfileService.findByUserName(userName);
-		return new ResponseEntity<UserProfile>(userProfile, HttpStatus.OK);
+		if (userProfile == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<UserProfile>(userProfile, httpStatus);
 	}
 
 	@RequestMapping(value = "/getUserProfileByEmailID/{emailID}/", method = RequestMethod.GET)
 	public ResponseEntity<UserProfile> getUserProfileByEmailID(@PathVariable("emailID") String emailID) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		UserProfile userProfile = userProfileService.findByEmailId(emailID);
-		return new ResponseEntity<UserProfile>(userProfile, HttpStatus.OK);
+		if (userProfile == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<UserProfile>(userProfile, httpStatus);
 	}
 
 	@RequestMapping(value = "/getUserProfileByPhoneNumber/{phoneNumber}/", method = RequestMethod.GET)
 	public ResponseEntity<UserProfile> getUserProfileByPhoneNumber(@PathVariable("phoneNumber") String phoneNumber) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		UserProfile userProfile = userProfileService.findByPhoneNumber(phoneNumber);
-		return new ResponseEntity<UserProfile>(userProfile, HttpStatus.OK);
+		if (userProfile == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<UserProfile>(userProfile, httpStatus);
 	}
 	
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)
@@ -134,5 +156,15 @@ public class UserProfileController {
 			return new ResponseEntity<>(headers, status);
 		}
 
+	}
+	
+	@RequestMapping(value = "/getUserProfileByUniqueIdentity/{uniqueIdentity}/", method = RequestMethod.GET)
+	public ResponseEntity<UserProfile> getUserProfileByUniqueIdentity(@PathVariable("uniqueIdentity") String uniqueIdentity) {
+		HttpStatus httpStatus = HttpStatus.OK;
+		UserProfile userProfile = userProfileService.findByUniqueIdentity(uniqueIdentity);
+		if (userProfile == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<UserProfile>(userProfile, httpStatus);
 	}
 }

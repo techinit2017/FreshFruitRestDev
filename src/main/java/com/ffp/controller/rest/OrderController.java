@@ -24,33 +24,42 @@ public class OrderController {
 	
 	@Autowired
 	private OrderService orderService;
-
 	
 	@RequestMapping(value = "/getOrderByID/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Order> getOrderByID(@PathVariable("id") Integer id) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		Order order = orderService.findOne(id);
-		return new ResponseEntity<Order>(order, HttpStatus.OK);
+		if (order == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<Order>(order, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getOrderByBuyerId/{buyerId}", method = RequestMethod.GET)
 	public ResponseEntity<List<Order>> getProductByBuyerId(@PathVariable("buyerId") String buyerId) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<Order> orders = orderService.findByBuyerId(buyerId);
-		return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
+		if (orders == null || orders.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<Order>>(orders, httpStatus);
 	}
 	
 	@RequestMapping(value = "/save", method = RequestMethod.PUT)
 	public ResponseEntity<Void> save(@RequestBody Order order, UriComponentsBuilder ucBuilder) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		Order newOrder = orderService.save(order);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/getOrderByID/{id}").buildAndExpand(newOrder.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Void>(headers, httpStatus);
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseEntity<Void> create(@RequestBody Order order, UriComponentsBuilder ucBuilder) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		Order newOrder = orderService.save(order);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/getOrderByID/{id}").buildAndExpand(newOrder.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Void>(headers, httpStatus);
 	}
 }

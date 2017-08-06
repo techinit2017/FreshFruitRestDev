@@ -28,39 +28,62 @@ public class ProductController {
 	
 	@RequestMapping(value = "/getAllProducts", method = RequestMethod.GET)
 	public ResponseEntity<List<Product>> getAllProducts() {
-
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<Product> allProducts = productService.findAll();
-		return new ResponseEntity<List<Product>>(allProducts, HttpStatus.OK);
+		if (allProducts == null || allProducts.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<Product>>(allProducts, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getProductByID/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Product> getProductByID(@PathVariable("id") Integer id) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		Product product = productService.findOne(id);
-		return new ResponseEntity<Product>(product, HttpStatus.OK);
+		if (product == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<Product>(product, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getProductByName/{name}", method = RequestMethod.GET)
 	public ResponseEntity<List<Product>> getProductByName(@PathVariable("name") String name) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<Product> products = productService.findByName(name);
-		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+		if (products == null || products.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<Product>>(products, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getProductByType/{type}", method = RequestMethod.GET)
 	public ResponseEntity<List<Product>> getProductByType(@PathVariable("type") String type) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<Product> products = productService.findByType(type);
-		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+		if (products == null || products.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<Product>>(products, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getProductBySellerId/{sellerId}", method = RequestMethod.GET)
 	public ResponseEntity<List<Product>> getProductBySellerId(@PathVariable("sellerId") String sellerId) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<Product> products = productService.findBySellerId(sellerId);
-		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+		if (products == null || products.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<Product>>(products, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getProductByAvailable/{available}", method = RequestMethod.GET)
 	public ResponseEntity<List<Product>> getProductBySellerId(@PathVariable("available") int available) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<Product> products = productService.findByAvailable(available);
-		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+		if (products == null || products.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<Product>>(products, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getCount", method = RequestMethod.GET)
@@ -103,13 +126,17 @@ public class ProductController {
 	 */
 	@RequestMapping(value = "/getSearchProducts", method = RequestMethod.POST)
 	public ResponseEntity<List<Product>> getSearchProducts(@RequestBody SearchProduct searchProduct) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<Product> allProducts = productService.findSearch(searchProduct, false);
-		HttpStatus status = HttpStatus.OK;
-		if (allProducts.size() == 0) {
+		if (allProducts == null || allProducts.size() == 0) {
 			allProducts = productService.findSearch(searchProduct, true);
-			status = HttpStatus.PARTIAL_CONTENT;
+			if (allProducts == null || allProducts.isEmpty()) {
+				httpStatus = HttpStatus.NOT_FOUND;
+			} else {
+				httpStatus = HttpStatus.PARTIAL_CONTENT;
+			}
 		}
-		return new ResponseEntity<List<Product>>(allProducts, status);
+		return new ResponseEntity<List<Product>>(allProducts, httpStatus);
 	}
 
 }

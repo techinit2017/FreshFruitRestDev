@@ -24,25 +24,41 @@ public class ProductVarietyController {
 	
 	@RequestMapping(value = "/getProductVarietyByID/{id}", method = RequestMethod.GET)
 	public ResponseEntity<ProductVariety> getProductVarietyByID(@PathVariable("id") Integer id) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		ProductVariety productVariety = productVarietyService.findOne(id);
-		return new ResponseEntity<ProductVariety>(productVariety, HttpStatus.OK);
+		if (productVariety == null) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<ProductVariety>(productVariety, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getProductVarietyByVariety/{variety}", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductVariety>> getProductVarietyByVariety(@PathVariable("variety") String variety) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<ProductVariety> productVarietys = productVarietyService.findByVariety(variety);
-		return new ResponseEntity<List<ProductVariety>>(productVarietys, HttpStatus.OK);
+		if (productVarietys == null || productVarietys.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<ProductVariety>>(productVarietys, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getProductVarietyByProduct/{product}", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductVariety>> getProductVarietyByProduct(@PathVariable("product") String product) {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<ProductVariety> productVarietys = productVarietyService.findByProduct(product);
-		return new ResponseEntity<List<ProductVariety>>(productVarietys, HttpStatus.OK);
+		if (productVarietys == null || productVarietys.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<ProductVariety>>(productVarietys, httpStatus);
 	}
 	
 	@RequestMapping(value = "/getAllProductVariety", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductVariety>> getAllProductVariety() {
+		HttpStatus httpStatus = HttpStatus.OK;
 		List<ProductVariety> productVarietys = productVarietyService.findAll();
-		return new ResponseEntity<List<ProductVariety>>(productVarietys, HttpStatus.OK);
+		if (productVarietys == null || productVarietys.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<ProductVariety>>(productVarietys, httpStatus);
 	}
 }

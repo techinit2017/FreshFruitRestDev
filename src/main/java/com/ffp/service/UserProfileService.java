@@ -2,6 +2,9 @@ package com.ffp.service;
 
 import java.util.List;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,5 +78,24 @@ public class UserProfileService {
 			return false;
 		}
 		return true;
+	}
+	
+	public UserProfile findByUniqueIdentity(String uniqueIdentity) {
+		if (isValidEmailAddress(uniqueIdentity)) {
+			return userProfileDao.findByEmailId(uniqueIdentity);
+		} else {
+			return userProfileDao.findByUserName(uniqueIdentity);
+		}
+	}
+	
+	private boolean isValidEmailAddress(String email) {
+		   boolean result = true;
+		   try {
+		      InternetAddress emailAddr = new InternetAddress(email);
+		      emailAddr.validate();
+		   } catch (AddressException ex) {
+		      result = false;
+		   }
+		   return result;
 	}
 }
