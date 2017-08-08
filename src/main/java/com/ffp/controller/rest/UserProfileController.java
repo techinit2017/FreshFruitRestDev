@@ -1,8 +1,16 @@
 package com.ffp.controller.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SortOrder;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +20,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.ffp.data.CustomPageRequest;
+import com.ffp.data.PageParam;
 import com.ffp.data.UserProfile;
 import com.ffp.service.UserProfileService;
 import com.ffp.utils.Encryption;
@@ -87,7 +98,7 @@ public class UserProfileController {
 		UserProfile profile = userProfileService.save(userProfile);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/getUserProfileByID/{id}").buildAndExpand(profile.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Void>(headers, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/getUserProfileByUserName/{userName}", method = RequestMethod.GET)
@@ -119,7 +130,7 @@ public class UserProfileController {
 		}
 		return new ResponseEntity<UserProfile>(userProfile, httpStatus);
 	}
-	
+
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)
 	public ResponseEntity<Void> validate(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
 		HttpHeaders headers = new HttpHeaders();
@@ -157,9 +168,10 @@ public class UserProfileController {
 		}
 
 	}
-	
+
 	@RequestMapping(value = "/getUserProfileByUniqueIdentity/{uniqueIdentity}/", method = RequestMethod.GET)
-	public ResponseEntity<UserProfile> getUserProfileByUniqueIdentity(@PathVariable("uniqueIdentity") String uniqueIdentity) {
+	public ResponseEntity<UserProfile> getUserProfileByUniqueIdentity(
+			@PathVariable("uniqueIdentity") String uniqueIdentity) {
 		HttpStatus httpStatus = HttpStatus.OK;
 		UserProfile userProfile = userProfileService.findByUniqueIdentity(uniqueIdentity);
 		if (userProfile == null) {
@@ -167,4 +179,52 @@ public class UserProfileController {
 		}
 		return new ResponseEntity<UserProfile>(userProfile, httpStatus);
 	}
+
+	@RequestMapping(value = "/getAllUsersProfileByPageRequest", method = RequestMethod.POST)
+	public ResponseEntity<List<UserProfile>> getAllUsersProfile(@RequestBody CustomPageRequest pageRequest) {
+		HttpHeaders headers = new HttpHeaders();
+		HttpStatus httpStatus = HttpStatus.OK;
+		Page<UserProfile> allUserProfiles = userProfileService.findAllByPageRequest(pageRequest);
+		if(allUserProfiles!=null ){
+			List<UserProfile> userprofilelist= allUserProfiles.getContent();
+			headers.set("RECORD_COUNT",String.valueOf( allUserProfiles.getTotalElements()));
+			httpStatus =HttpStatus.OK;
+			return new ResponseEntity<List<UserProfile>>(userprofilelist,headers, httpStatus);
+		}
+		else  {
+			httpStatus = HttpStatus.NOT_FOUND;
+			return new ResponseEntity<>(httpStatus);
+		}
+		
+	}
+
+//	@RequestMapping(value = "/test", method = RequestMethod.POST)
+//	public ResponseEntity<PageRequest> test() {
+//		PageRequest pageRequest = new PageRequest(1, 10, new Sort(Sort.Direction.DESC, "description"));
+//		return new ResponseEntity<PageRequest>(pageRequest, HttpStatus.OK);
+//	}
+//
+//	@RequestMapping(value = "/test1", method = RequestMethod.POST)
+//	public ResponseEntity<Pageable> test(@RequestBody PageParam pageParam) {
+//		PageRequest pageRequest = null;
+//		
+//		if (pageParam.getSort() != null && !pageParam.getSort().isEmpty()) {
+//			List<Order> orderlist =new ArrayList<>();
+//			for (com.ffp.data.Sort sort : pageParam.getSort()) {
+//				orderlist.add(new Order(getDirection(sort.getDirection()), sort.getProperty()));
+//			}
+//			pageRequest = new PageRequest(pageParam.getPageNumber(), pageParam.getPageSize(), new Sort(orderlist));
+//		} else {
+//			pageRequest = new PageRequest(pageParam.getPageNumber(), pageParam.getPageSize());
+//		}
+//		return new ResponseEntity<Pageable>(pageRequest, HttpStatus.OK);
+//	}
+//
+//	private Sort.Direction getDirection(final String direction) {
+//		if (direction.equalsIgnoreCase("DESC")) {
+//			return Sort.Direction.DESC;
+//		} else {
+//			return Sort.Direction.ASC;
+//		}
+//	}
 }
