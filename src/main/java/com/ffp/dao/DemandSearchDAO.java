@@ -10,31 +10,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.ffp.data.Product;
+import com.ffp.data.Demand;
 import com.ffp.data.SearchProduct;
 
 @Repository
-public class SearchDao {
+public class DemandSearchDAO {
 
-	public SearchDao() {
-		super();
+	
+	public DemandSearchDAO() {
 	}
 
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
 	
 	public Map<String,Object> doSearch(SearchProduct searchProduct, boolean override) {
-//		SessionFactory factory = new Configuration().configure().buildSessionFactory();
-//		Session session = factory.openSession();
-		//Session session = hibernateTemplate.getSessionFactory().getCurrentSession();
-		//Criteria criteria = session.createCriteria(Product.class);
 		Map<String,Object> returnMap=new HashMap<>();
-		DetachedCriteria criteria = DetachedCriteria.forClass(Product.class);
+		DetachedCriteria criteria = DetachedCriteria.forClass(Demand.class);
 		if (searchProduct.getName() != null) {
-			criteria.add(Restrictions.like("name", "%" + searchProduct.getName() + "%"));
+			criteria.add(Restrictions.like("variety", "%" + searchProduct.getName() + "%"));
 		}
 		if (searchProduct.getType() != null) {
-			criteria.add(Restrictions.eq("type", searchProduct.getType()));
+			criteria.add(Restrictions.eq("product", searchProduct.getType()));
 		}
 		
 		if (!override) {
@@ -45,26 +41,22 @@ public class SearchDao {
 				criteria.add(Restrictions.ge("price", searchProduct.getPriceAbove()));
 			}
 			if (searchProduct.getQuantityAvailable() != null) {
-				criteria.add(Restrictions.le("quantityAvailable", searchProduct.getQuantityAvailable()));
+				criteria.add(Restrictions.le("quantity", searchProduct.getQuantityAvailable()));
 			}
 			if (searchProduct.getMeasurement() != null) {
 				criteria.add(Restrictions.eq("measurement", searchProduct.getMeasurement()));
-			}
-			if (searchProduct.getGrade() != null) {
-				criteria.add(Restrictions.eq("grade", searchProduct.getGrade()));
 			}
 			if (searchProduct.getCountry() != null) {
 				criteria.add(Restrictions.eq("country", searchProduct.getCountry()));
 			}
 			if (searchProduct.getAvailableBefore() != null) {
-				criteria.add(Restrictions.le("available", searchProduct.getAvailableBefore()));
+				criteria.add(Restrictions.le("availableDate", searchProduct.getAvailableBefore()));
 			}
 			if (searchProduct.getAvailableAfter() != null) {
-				criteria.add(Restrictions.ge("available", searchProduct.getAvailableAfter()));
+				criteria.add(Restrictions.ge("availableDate", searchProduct.getAvailableAfter()));
 			}
 		}
 		
-//		List results = hibernateTemplate.findByCriteria(criteria);
 		int count = hibernateTemplate.findByCriteria(criteria).size();
 		List<?> results = hibernateTemplate.findByCriteria(criteria, searchProduct.getPageNumber(), searchProduct.getPageSize());
 		

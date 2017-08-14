@@ -1,6 +1,7 @@
 package com.ffp.controller.rest;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ffp.data.Demand;
+import com.ffp.data.SearchProduct;
 import com.ffp.service.DemandService;
 
 @RestController
@@ -57,5 +59,25 @@ public class DemandController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/getDemandByID/{id}").buildAndExpand(newDemand.getId()).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.ACCEPTED);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/getDemandBySearch", method = RequestMethod.POST)
+	public ResponseEntity<List<Demand>> getDemandBySearch(@RequestBody SearchProduct searchProduct) {
+		HttpStatus httpStatus = HttpStatus.OK;
+		Map<String,Object> returnMap= demandService.findSearch(searchProduct, false);
+		List<Demand> allDemand = (List<Demand>)returnMap.get("LIST");
+		if (allDemand == null || allDemand.size() == 0) {
+			returnMap = demandService.findSearch(searchProduct, true);
+			allDemand = (List<Demand>)returnMap.get("LIST");
+			if (allDemand == null || allDemand.isEmpty()) {
+				httpStatus = HttpStatus.NOT_FOUND;
+			} else {
+				httpStatus = HttpStatus.PARTIAL_CONTENT;
+			}
+		}
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("RECORD_COUNT",String.valueOf( returnMap.get("RECORD_COUNT")));
+		return new ResponseEntity<List<Demand>>(allDemand,headers, httpStatus);
 	}
 }
