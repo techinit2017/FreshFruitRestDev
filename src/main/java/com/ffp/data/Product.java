@@ -47,21 +47,23 @@ public class Product implements java.io.Serializable {
 	public Product() {
 	}
 
-	public Product(UserProfile userProfile, String name, String quantityAvailable, String price, String measurement,
-			int isActive) {
+	public Product(UserProfile userProfile, String name, String type, String imagePath, String quantityAvailable,
+			String price, String measurement, Date available, int isActive) {
 		this.userProfile = userProfile;
 		this.name = name;
+		this.type = type;
+		this.imagePath = imagePath;
 		this.quantityAvailable = quantityAvailable;
 		this.price = price;
 		this.measurement = measurement;
+		this.available = available;
 		this.isActive = isActive;
 	}
 
 	public Product(UserProfile userProfile, String name, String type, String imagePath, String productInfo,
 			String productDesc, String grade, String size, String color, String minOrderQty, String quantityAvailable,
 			String price, Integer priceNegotiable, String measurement, Date available, String packaging, int isActive) {
-		
-//			Set orders) {
+//			,Set orders) {
 		this.userProfile = userProfile;
 		this.name = name;
 		this.type = type;
@@ -113,7 +115,7 @@ public class Product implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "TYPE")
+	@Column(name = "TYPE", nullable = false)
 	public String getType() {
 		return this.type;
 	}
@@ -122,7 +124,7 @@ public class Product implements java.io.Serializable {
 		this.type = type;
 	}
 
-	@Column(name = "IMAGE_PATH")
+	@Column(name = "IMAGE_PATH", nullable = false)
 	public String getImagePath() {
 		return this.imagePath;
 	}
@@ -222,7 +224,7 @@ public class Product implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "AVAILABLE", length = 10)
+	@Column(name = "AVAILABLE", nullable = false, length = 10)
 	public Date getAvailable() {
 		return this.available;
 	}

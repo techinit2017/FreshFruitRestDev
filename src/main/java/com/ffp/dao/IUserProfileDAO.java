@@ -33,4 +33,6 @@ public interface IUserProfileDAO extends PagingAndSortingRepository<UserProfile,
 	UserProfile findByPhoneNumber(String phoneNumber);
 	
 	boolean existsByUserName(String userName);
+	
+	boolean existsByEmailId(String emailId);
 }

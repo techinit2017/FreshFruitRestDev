@@ -68,8 +68,8 @@ public class UserProfileService {
 		return userProfileDao.findByPhoneNumber(phoneNumber);
 	}
 
-	public boolean exists(String userName) {
-		return userProfileDao.existsByUserName(userName);
+	public boolean exists(String userName, String emailID) {
+		return (userProfileDao.existsByUserName(userName) || userProfileDao.existsByEmailId(emailID));
 	}
 
 	public boolean exists(UserProfile userProfile) {

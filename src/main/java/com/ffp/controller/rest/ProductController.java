@@ -1,6 +1,7 @@
 package com.ffp.controller.rest;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +21,7 @@ import com.ffp.service.ProductService;
 
 @RestController
 @RequestMapping(value = "/product")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*",exposedHeaders ="RECORD_COUNT")
 public class ProductController {
 	
 	@Autowired
@@ -124,19 +125,24 @@ public class ProductController {
 	 * @param searchProduct
 	 * @return HttpStatus.OK when exact search is match else HttpStatus.PARTIAL_CONTENT
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getSearchProducts", method = RequestMethod.POST)
 	public ResponseEntity<List<Product>> getSearchProducts(@RequestBody SearchProduct searchProduct) {
 		HttpStatus httpStatus = HttpStatus.OK;
-		List<Product> allProducts = productService.findSearch(searchProduct, false);
+		Map<String,Object> returnMap= productService.findSearch(searchProduct, false);
+		List<Product> allProducts = (List<Product>)returnMap.get("LIST");
 		if (allProducts == null || allProducts.size() == 0) {
-			allProducts = productService.findSearch(searchProduct, true);
+			returnMap = productService.findSearch(searchProduct, true);
+			 allProducts = (List<Product>)returnMap.get("LIST");
 			if (allProducts == null || allProducts.isEmpty()) {
 				httpStatus = HttpStatus.NOT_FOUND;
 			} else {
 				httpStatus = HttpStatus.PARTIAL_CONTENT;
 			}
 		}
-		return new ResponseEntity<List<Product>>(allProducts, httpStatus);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("RECORD_COUNT",String.valueOf( returnMap.get("RECORD_COUNT")));
+		return new ResponseEntity<List<Product>>(allProducts,headers, httpStatus);
 	}
 
 }

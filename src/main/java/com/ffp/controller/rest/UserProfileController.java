@@ -1,16 +1,10 @@
 package com.ffp.controller.rest;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.SortOrder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.ffp.data.CustomPageRequest;
 import com.ffp.data.PageParam;
 import com.ffp.data.UserProfile;
 import com.ffp.service.UserProfileService;
@@ -33,7 +25,7 @@ import com.ffp.utils.FFPExceptionHandler;
 
 @RestController
 @RequestMapping(value = "/profile")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*",exposedHeaders ="RECORD_COUNT")
 public class UserProfileController {
 
 	@Autowired
@@ -78,7 +70,7 @@ public class UserProfileController {
 	public ResponseEntity<UserProfile> create(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
 		HttpHeaders headers = new HttpHeaders();
 		HttpStatus status;
-		if (!userProfileService.exists(userProfile.getUserName())) {
+		if (!userProfileService.exists(userProfile.getUserName(), userProfile.getEmailId())) {
 			// encrypt password and before saving
 			String password = Encryption.encrypt(userProfile.getPassword());
 			userProfile.setPassword(password);
@@ -181,14 +173,14 @@ public class UserProfileController {
 	}
 
 	@RequestMapping(value = "/getAllUsersProfileByPageRequest", method = RequestMethod.POST)
-	public ResponseEntity<List<UserProfile>> getAllUsersProfile(@RequestBody CustomPageRequest pageRequest) {
+	public ResponseEntity<List<UserProfile>> getAllUsersProfile(@RequestBody PageParam pageParam) {
 		HttpHeaders headers = new HttpHeaders();
 		HttpStatus httpStatus = HttpStatus.OK;
-		Page<UserProfile> allUserProfiles = userProfileService.findAllByPageRequest(pageRequest);
+		Page<UserProfile> allUserProfiles = userProfileService.findAllByPageRequest(pageParam.getPageRequest());
 		if(allUserProfiles!=null ){
 			List<UserProfile> userprofilelist= allUserProfiles.getContent();
 			headers.set("RECORD_COUNT",String.valueOf( allUserProfiles.getTotalElements()));
-			httpStatus =HttpStatus.OK;
+			httpStatus = HttpStatus.OK;
 			return new ResponseEntity<List<UserProfile>>(userprofilelist,headers, httpStatus);
 		}
 		else  {
@@ -205,7 +197,7 @@ public class UserProfileController {
 //	}
 //
 //	@RequestMapping(value = "/test1", method = RequestMethod.POST)
-//	public ResponseEntity<Pageable> test(@RequestBody PageParam pageParam) {
+//	public ResponseEntity<List<UserProfile>> test(@RequestBody PageParam pageParam) {
 //		PageRequest pageRequest = null;
 //		
 //		if (pageParam.getSort() != null && !pageParam.getSort().isEmpty()) {
@@ -217,9 +209,12 @@ public class UserProfileController {
 //		} else {
 //			pageRequest = new PageRequest(pageParam.getPageNumber(), pageParam.getPageSize());
 //		}
-//		return new ResponseEntity<Pageable>(pageRequest, HttpStatus.OK);
+		
+//			return getAllUsersProfile(pageParam.getPageRequest());
+		
+		//return new ResponseEntity<Pageable>(pageRequest, HttpStatus.OK);
 //	}
-//
+
 //	private Sort.Direction getDirection(final String direction) {
 //		if (direction.equalsIgnoreCase("DESC")) {
 //			return Sort.Direction.DESC;

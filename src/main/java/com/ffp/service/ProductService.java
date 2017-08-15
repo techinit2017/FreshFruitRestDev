@@ -1,6 +1,7 @@
 package com.ffp.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,7 @@ public class ProductService {
 		productDAO.delete(id);
 	}
 	
-	public List<Product> findSearch(SearchProduct searchProduct, boolean override) {
+	public Map<String,Object> findSearch(SearchProduct searchProduct, boolean override) {
 		return searchDao.doSearch(searchProduct, override);
 	}
 

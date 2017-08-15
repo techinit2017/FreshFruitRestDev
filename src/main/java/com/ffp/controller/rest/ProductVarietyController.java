@@ -61,4 +61,10 @@ public class ProductVarietyController {
 		}
 		return new ResponseEntity<List<ProductVariety>>(productVarietys, httpStatus);
 	}
+	
+	@RequestMapping(value = "/getProductNames", method = RequestMethod.GET)
+	public ResponseEntity<List<String>> getProductNames() {
+		List<String> productVarietys = productVarietyService.findDistinctProductNames();
+		return new ResponseEntity<List<String>>(productVarietys, HttpStatus.OK);
+	}
 }

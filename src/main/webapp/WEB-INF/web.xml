@@ -12,17 +12,17 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
-	<context-param>
+	<!-- <context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/applicationContext.xml</param-value>
-	</context-param>
+	</context-param> -->
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
-	<listener>
+	<!-- <listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
+	</listener> -->
 
 	<!-- Processes application requests -->
-	<servlet>
+	<!-- <servlet>
 		<servlet-name>appServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
@@ -35,7 +35,7 @@
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/*</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping> -->
 
 
 </web-app>

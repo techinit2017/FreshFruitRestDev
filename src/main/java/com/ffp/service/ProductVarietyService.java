@@ -29,5 +29,9 @@ public class ProductVarietyService {
 	public List<ProductVariety> findAll() {
 		return productVarietyDao.findAll();
 	}
+	
+	public List<String> findDistinctProductNames() {
+		return productVarietyDao.findDistinctProductNames();
+	}
 
 }
