@@ -67,4 +67,14 @@ public class ProductVarietyController {
 		List<String> productVarietys = productVarietyService.findDistinctProductNames();
 		return new ResponseEntity<List<String>>(productVarietys, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/getProductByType/{type}", method = RequestMethod.GET)
+	public ResponseEntity<List<ProductVariety>> getProductByType(@PathVariable("type") String type) {
+		HttpStatus httpStatus = HttpStatus.OK;
+		List<ProductVariety> productVarietys = productVarietyService.findByType(type);
+		if (productVarietys == null || productVarietys.isEmpty()) {
+			httpStatus = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<List<ProductVariety>>(productVarietys, httpStatus);
+	}
 }

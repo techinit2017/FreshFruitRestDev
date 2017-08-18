@@ -1,9 +1,11 @@
 package com.ffp.controller.rest;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.ffp.data.Demand;
+import com.ffp.data.PageParam;
 import com.ffp.data.Product;
 import com.ffp.data.SearchProduct;
 import com.ffp.service.ProductService;
@@ -67,18 +71,25 @@ public class ProductController {
 		return new ResponseEntity<List<Product>>(products, httpStatus);
 	}
 	
-	@RequestMapping(value = "/getProductBySellerId/{sellerId}", method = RequestMethod.GET)
-	public ResponseEntity<List<Product>> getProductBySellerId(@PathVariable("sellerId") String sellerId) {
+	@RequestMapping(value = "/getProductBySellerId/{sellerId}", method = RequestMethod.POST)
+	public ResponseEntity<List<Product>> getProductBySellerId(@PathVariable("sellerId") String sellerId, @RequestBody PageParam pageParam) {
 		HttpStatus httpStatus = HttpStatus.OK;
-		List<Product> products = productService.findBySellerId(sellerId);
-		if (products == null || products.isEmpty()) {
-			httpStatus = HttpStatus.NOT_FOUND;
+		HttpHeaders headers = new HttpHeaders();
+		Page<Product> products = productService.findBySellerId(sellerId, pageParam.getPageRequest());
+		if(products!=null ){
+			List<Product> productList = products.getContent();
+			headers.set("RECORD_COUNT",String.valueOf( products.getTotalElements()));
+			httpStatus = HttpStatus.OK;
+			return new ResponseEntity<List<Product>>(productList, headers, httpStatus);
 		}
-		return new ResponseEntity<List<Product>>(products, httpStatus);
+		else  {
+			httpStatus = HttpStatus.NOT_FOUND;
+			return new ResponseEntity<>(httpStatus);
+		}
 	}
 	
 	@RequestMapping(value = "/getProductByAvailable/{available}", method = RequestMethod.GET)
-	public ResponseEntity<List<Product>> getProductBySellerId(@PathVariable("available") int available) {
+	public ResponseEntity<List<Product>> getProductBySellerId(@PathVariable("available") Date available) {
 		HttpStatus httpStatus = HttpStatus.OK;
 		List<Product> products = productService.findByAvailable(available);
 		if (products == null || products.isEmpty()) {
@@ -94,19 +105,28 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value = "/save", method = RequestMethod.PUT)
-	public ResponseEntity<Void> save(@RequestBody Product product, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<Product> save(@RequestBody Product product, UriComponentsBuilder ucBuilder) {
 		Product newProduct = productService.save(product);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/getProductByID/{id}").buildAndExpand(newProduct.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.ACCEPTED);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setLocation(ucBuilder.path("/getProductByID/{id}").buildAndExpand(newProduct.getId()).toUri());
+		if (newProduct != null) {
+			return new ResponseEntity<Product>(newProduct, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+		}
+		
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseEntity<Void> create(@RequestBody Product product, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<Product> create(@RequestBody Product product, UriComponentsBuilder ucBuilder) {
 		Product newProduct = productService.save(product);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/getProductByID/{id}").buildAndExpand(newProduct.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.ACCEPTED);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setLocation(ucBuilder.path("/getProductByID/{id}").buildAndExpand(newProduct.getId()).toUri());
+		if (newProduct != null) {
+			return new ResponseEntity<Product>(newProduct, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
@@ -143,6 +163,11 @@ public class ProductController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("RECORD_COUNT",String.valueOf( returnMap.get("RECORD_COUNT")));
 		return new ResponseEntity<List<Product>>(allProducts,headers, httpStatus);
+	}
+	
+	@RequestMapping(value = "/getSearchProductJson", method = RequestMethod.POST)
+	public ResponseEntity<Demand> getSearchProductJson(@RequestBody Demand searchProduct) {
+		return new ResponseEntity<Demand>(searchProduct, HttpStatus.OK);
 	}
 
 }

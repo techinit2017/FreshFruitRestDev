@@ -1,7 +1,6 @@
 package com.ffp.controller.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,12 +36,12 @@ public class ApprovalController {
 	}
 	
 	@RequestMapping(value = "/approve", method = RequestMethod.POST)
-	public ResponseEntity<Void> approve(@RequestBody Approval approval, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<Approval> approve(@RequestBody Approval approval, UriComponentsBuilder ucBuilder) {
 		HttpStatus httpStatus = HttpStatus.OK;
 		Approval newApproval = approvalService.save(approval);
 		profileService.save(approval.getUserProfile());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/getApprovalByID/{id}").buildAndExpand(newApproval.getId()).toUri());
-		return new ResponseEntity<Void>(headers, httpStatus);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setLocation(ucBuilder.path("/getApprovalByID/{id}").buildAndExpand(newApproval.getId()).toUri());
+		return new ResponseEntity<Approval>(newApproval, httpStatus);
 	}
 }

@@ -36,6 +36,9 @@ public class Demand implements java.io.Serializable {
 	private String country;
 	private String city;
 	private Date availableDate;
+	private String grade;
+	private String size;
+	private String color;
 
 	public Demand() {
 	}
@@ -51,6 +54,23 @@ public class Demand implements java.io.Serializable {
 		this.country = country;
 		this.city = city;
 		this.availableDate = availableDate;
+	}
+
+	public Demand(UserProfile userProfile, String product, String variety, String price, String quantity,
+			String measurement, String country, String city, Date availableDate, String grade, String size,
+			String color) {
+		this.userProfile = userProfile;
+		this.product = product;
+		this.variety = variety;
+		this.price = price;
+		this.quantity = quantity;
+		this.measurement = measurement;
+		this.country = country;
+		this.city = city;
+		this.availableDate = availableDate;
+		this.grade = grade;
+		this.size = size;
+		this.color = color;
 	}
 
 	@Id
@@ -148,4 +168,30 @@ public class Demand implements java.io.Serializable {
 		this.availableDate = availableDate;
 	}
 
+	@Column(name = "GRADE", length = 45)
+	public String getGrade() {
+		return this.grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	@Column(name = "SIZE", length = 45)
+	public String getSize() {
+		return this.size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	@Column(name = "COLOR", length = 45)
+	public String getColor() {
+		return this.color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
 }

@@ -1,7 +1,10 @@
 package com.ffp.dao;
 
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 import com.ffp.data.Product;
@@ -17,9 +20,9 @@ public interface IProductDAO extends CrudRepository<Product, Integer> {
 	
 	List<Product> findByType(String type);
 	
-	List<Product> findByUserProfile(UserProfile profile);
+	Page<Product> findByUserProfile(UserProfile profile, Pageable pageable);
 	
-	List<Product> findByAvailable(int available);
+	List<Product> findByAvailable(Date available);
 
 	boolean exists(Integer id); 
 

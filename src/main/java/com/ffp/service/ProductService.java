@@ -1,12 +1,16 @@
 package com.ffp.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ffp.dao.IProductDAO;
+import com.ffp.dao.IUserProfileDAO;
 import com.ffp.dao.SearchDao;
 import com.ffp.data.Product;
 import com.ffp.data.SearchProduct;
@@ -19,6 +23,8 @@ public class ProductService {
 	private IProductDAO productDAO;
 	@Autowired
 	private SearchDao searchDao;
+	@Autowired
+	private IUserProfileDAO userProfileDao;
 
 	public List<Product> findAll() {
 		return productDAO.findAll();
@@ -36,13 +42,12 @@ public class ProductService {
 		return productDAO.findByType(type);
 	}
 
-	public List<Product> findBySellerId(String sellerId) {
-		UserProfile profile=new UserProfile();
-		profile.setId(Integer.parseInt(sellerId));
-		return productDAO.findByUserProfile(profile);
+	public Page<Product> findBySellerId(String sellerId, Pageable pageable) {
+		UserProfile profile = userProfileDao.findOne(Integer.parseInt(sellerId));
+		return productDAO.findByUserProfile(profile, pageable);
 	}
 
-	public List<Product> findByAvailable(int available) {
+	public List<Product> findByAvailable(Date available) {
 		return productDAO.findByAvailable(available);
 	}
 	

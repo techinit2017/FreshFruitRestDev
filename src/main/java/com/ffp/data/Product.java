@@ -42,6 +42,8 @@ public class Product implements java.io.Serializable {
 	private Date available;
 	private String packaging;
 	private int isActive;
+	private String country;
+	private String city;
 //	private Set orders = new HashSet(0);
 
 	public Product() {
@@ -62,8 +64,9 @@ public class Product implements java.io.Serializable {
 
 	public Product(UserProfile userProfile, String name, String type, String imagePath, String productInfo,
 			String productDesc, String grade, String size, String color, String minOrderQty, String quantityAvailable,
-			String price, Integer priceNegotiable, String measurement, Date available, String packaging, int isActive) {
-//			,Set orders) {
+			String price, Integer priceNegotiable, String measurement, Date available, String packaging, int isActive,
+			String country, String city) {
+//	, Set orders) {
 		this.userProfile = userProfile;
 		this.name = name;
 		this.type = type;
@@ -81,6 +84,8 @@ public class Product implements java.io.Serializable {
 		this.available = available;
 		this.packaging = packaging;
 		this.isActive = isActive;
+		this.country = country;
+		this.city = city;
 //		this.orders = orders;
 	}
 
@@ -251,6 +256,24 @@ public class Product implements java.io.Serializable {
 		this.isActive = isActive;
 	}
 
+	@Column(name = "COUNTRY", length = 60)
+	public String getCountry() {
+		return this.country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	@Column(name = "CITY", length = 60)
+	public String getCity() {
+		return this.city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 //	public Set getOrders() {
 //		return this.orders;
@@ -261,4 +284,5 @@ public class Product implements java.io.Serializable {
 //	}
 
 }
+
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +67,7 @@ public class UserProfileController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseEntity<UserProfile> create(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
-		HttpHeaders headers = new HttpHeaders();
+//		HttpHeaders headers = new HttpHeaders();
 		HttpStatus status;
 		if (!userProfileService.exists(userProfile.getUserName(), userProfile.getEmailId())) {
 			// encrypt password and before saving
@@ -76,9 +75,9 @@ public class UserProfileController {
 			userProfile.setPassword(password);
 
 			UserProfile profile = userProfileService.save(userProfile);
-			headers.setLocation(ucBuilder.path("/getUserProfileByID/{id}").buildAndExpand(profile.getId()).toUri());
+//			headers.setLocation(ucBuilder.path("/getUserProfileByID/{id}").buildAndExpand(profile.getId()).toUri());
 			status = HttpStatus.CREATED;
-			return new ResponseEntity<UserProfile>(profile, status);
+			return new ResponseEntity<UserProfile>(profile,status);
 		} else {
 			status = HttpStatus.CONFLICT;
 			return new ResponseEntity<UserProfile>(status);
@@ -86,11 +85,11 @@ public class UserProfileController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.PUT)
-	public ResponseEntity<Void> save(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<UserProfile> save(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
 		UserProfile profile = userProfileService.save(userProfile);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/getUserProfileByID/{id}").buildAndExpand(profile.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.OK);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setLocation(ucBuilder.path("/getUserProfileByID/{id}").buildAndExpand(profile.getId()).toUri());
+		return new ResponseEntity<UserProfile>(profile, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/getUserProfileByUserName/{userName}", method = RequestMethod.GET)

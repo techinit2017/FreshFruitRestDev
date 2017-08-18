@@ -2,9 +2,12 @@ package com.ffp.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 import com.ffp.data.Demand;
+import com.ffp.data.UserProfile;
 
 public interface IDemandDAO extends CrudRepository<Demand, Integer>{
 
@@ -14,5 +17,7 @@ public interface IDemandDAO extends CrudRepository<Demand, Integer>{
 
 	List<Demand> findAll(); 
 
-	void delete(Demand demand); 
+	void delete(Demand demand);
+	
+	Page<Demand> findByUserProfile(UserProfile userProfile, Pageable paegable); 
 }

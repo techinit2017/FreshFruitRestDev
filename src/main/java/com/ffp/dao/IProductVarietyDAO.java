@@ -19,4 +19,7 @@ public interface IProductVarietyDAO extends CrudRepository<ProductVariety, Integ
 	
 	@Query("SELECT DISTINCT p.product FROM ProductVariety p ")
 	List<String> findDistinctProductNames();
+
+	@Query("SELECT DISTINCT p.product FROM ProductVariety p where p.type =?1")
+	List<ProductVariety> findByType(String type);
 }
