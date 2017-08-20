@@ -155,7 +155,7 @@ public class ProductController {
 			returnMap = productService.findSearch(searchProduct, true);
 			 allProducts = (List<Product>)returnMap.get("LIST");
 			if (allProducts == null || allProducts.isEmpty()) {
-				httpStatus = HttpStatus.NOT_FOUND;
+				// httpStatus = HttpStatus.NOT_FOUND;
 			} else {
 				httpStatus = HttpStatus.PARTIAL_CONTENT;
 			}
