@@ -91,6 +91,21 @@ public class UserProfileController {
 //		headers.setLocation(ucBuilder.path("/getUserProfileByID/{id}").buildAndExpand(profile.getId()).toUri());
 		return new ResponseEntity<UserProfile>(profile, HttpStatus.OK);
 	}
+	/**
+	 * 
+	 * @param userProfile
+	 * @param ucBuilder
+	 * @return
+	 */
+	
+	@RequestMapping(value = "/resetPassword", method = RequestMethod.PUT)
+	public ResponseEntity<UserProfile> resetPassword(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
+		String password = Encryption.encrypt(userProfile.getPassword());
+		userProfile.setPassword(password);
+		UserProfile profile = userProfileService.save(userProfile);
+		
+		return new ResponseEntity<UserProfile>(profile, HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/getUserProfileByUserName/{userName}", method = RequestMethod.GET)
 	public ResponseEntity<UserProfile> getUserProfileByUserName(@PathVariable("userName") String userName) {
@@ -123,15 +138,17 @@ public class UserProfileController {
 	}
 
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)
-	public ResponseEntity<Void> validate(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<UserProfile> validate(@RequestBody UserProfile userProfile, UriComponentsBuilder ucBuilder) {
 		HttpHeaders headers = new HttpHeaders();
 		HttpStatus status;
-		if (userProfileService.exists(userProfile)) {
+		UserProfile validUserProfile;
+		if ((validUserProfile=userProfileService.exists(userProfile))!=null) {
 			status = HttpStatus.OK;
+			return new ResponseEntity<UserProfile>(validUserProfile,headers, status);
 		} else {
-			status = HttpStatus.NOT_ACCEPTABLE;
+			status = HttpStatus.NOT_FOUND;
 		}
-		return new ResponseEntity<Void>(headers, status);
+		return new ResponseEntity<UserProfile>(headers, status);
 	}
 
 	/**

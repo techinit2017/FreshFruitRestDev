@@ -72,23 +72,25 @@ public class UserProfileService {
 		return (userProfileDao.existsByUserName(userName) || userProfileDao.existsByEmailId(emailID));
 	}
 
-	public boolean exists(UserProfile userProfile) {
-		UserProfile existingUserProfile = userProfileDao.findOne(userProfile.getId());
+	public UserProfile exists(UserProfile userProfile) {
+		//UserProfile existingUserProfile = userProfileDao.findOne(userProfile.getId());
+		//user name as Unique identity
+		UserProfile existingUserProfile = findByUniqueIdentity(userProfile.getUserName()); 
 		if (existingUserProfile == null) {
-			return false;
+			return null;
 		}
 
-		if (!Utils.dateFormatter("yyyy-MM-dd", existingUserProfile.getDob())
+		/*if (!Utils.dateFormatter("yyyy-MM-dd", existingUserProfile.getDob())
 				.equals(Utils.dateFormatter("yyyy-MM-dd", existingUserProfile.getDob()))) {
 			return false;
-		}
+		}*/
 		if (!existingUserProfile.getSecretQuestion().equals(userProfile.getSecretQuestion())) {
-			return false;
+			return null;
 		}
 		if (!existingUserProfile.getSecretAnswer().equals(userProfile.getSecretAnswer())) {
-			return false;
+			return null;
 		}
-		return true;
+		return existingUserProfile;
 	}
 
 	public UserProfile findByUniqueIdentity(String uniqueIdentity) {
