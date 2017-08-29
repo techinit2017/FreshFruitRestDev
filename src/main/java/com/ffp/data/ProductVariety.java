@@ -23,6 +23,7 @@ public class ProductVariety implements java.io.Serializable {
 	private String product;
 	private String variety;
 	private String type;
+	private String productDescription;
 
 	public ProductVariety() {
 	}
@@ -31,6 +32,13 @@ public class ProductVariety implements java.io.Serializable {
 		this.product = product;
 		this.variety = variety;
 		this.type = type;
+	}
+
+	public ProductVariety(String product, String variety, String type, String productDescription) {
+		this.product = product;
+		this.variety = variety;
+		this.type = type;
+		this.productDescription = productDescription;
 	}
 
 	@Id
@@ -70,6 +78,15 @@ public class ProductVariety implements java.io.Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Column(name = "PRODUCT_DESCRIPTION")
+	public String getProductDescription() {
+		return this.productDescription;
+	}
+
+	public void setProductDescription(String productDescription) {
+		this.productDescription = productDescription;
 	}
 
 }

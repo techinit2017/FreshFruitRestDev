@@ -38,6 +38,7 @@ public class Product implements java.io.Serializable {
 	private String quantityAvailable;
 	private String price;
 	private Integer priceNegotiable;
+	private String unit;
 	private String measurement;
 	private Date available;
 	private String packaging;
@@ -64,8 +65,8 @@ public class Product implements java.io.Serializable {
 
 	public Product(UserProfile userProfile, String name, String type, String imagePath, String productInfo,
 			String productDesc, String grade, String size, String color, String minOrderQty, String quantityAvailable,
-			String price, Integer priceNegotiable, String measurement, Date available, String packaging, int isActive,
-			String country, String city) {
+			String price, Integer priceNegotiable, String unit, String measurement, Date available, String packaging,
+			int isActive, String country, String city ) {
 //	, Set orders) {
 		this.userProfile = userProfile;
 		this.name = name;
@@ -80,6 +81,7 @@ public class Product implements java.io.Serializable {
 		this.quantityAvailable = quantityAvailable;
 		this.price = price;
 		this.priceNegotiable = priceNegotiable;
+		this.unit = unit;
 		this.measurement = measurement;
 		this.available = available;
 		this.packaging = packaging;
@@ -217,6 +219,15 @@ public class Product implements java.io.Serializable {
 
 	public void setPriceNegotiable(Integer priceNegotiable) {
 		this.priceNegotiable = priceNegotiable;
+	}
+
+	@Column(name = "UNIT", length = 45)
+	public String getUnit() {
+		return this.unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	@Column(name = "MEASUREMENT", nullable = false)
